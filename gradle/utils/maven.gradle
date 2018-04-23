@@ -1,0 +1,15 @@
+ext {
+    mavenDir = System.getenv("USERPROFILE") + '/.m2/repository/'
+}
+
+task cleanMaven(type: Delete) {
+    doFirst {
+        deleteMavenDir('com.veronym.aws/aws/')
+    }
+}
+
+def deleteMavenDir(dirToDelete) {
+    def dir = mavenDir + dirToDelete
+    delete dir
+    println '[DELETE]: ' + dir
+}

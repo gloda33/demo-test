@@ -1,0 +1,16 @@
+ext {
+    externalProperties = new Properties()
+    getExternalVersion = this.&getExternalVersion
+}
+
+def getExternalVersion(name) {
+    if (externalProperties.isEmpty()) {
+        File propertiesFile = new File("$rootDir/gradle/versions/external.properties")
+        if (propertiesFile.exists()) {
+            externalProperties.load(new FileInputStream(propertiesFile))
+            println 'Load external versions properties file'
+        }
+    }
+    return externalProperties[name]
+}
+

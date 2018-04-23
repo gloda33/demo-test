@@ -1,0 +1,18 @@
+apply plugin: "checkstyle"
+checkstyle {
+    configFile = file("${rootProject.rootDir}/gradle/utils/checkstyle/checkstyle_rules.xml")
+    ignoreFailures = false
+    toolVersion = 8.4
+}
+
+checkstyleMain {
+    source = fileTree('.') {
+        excludes = ['.*/**', 'gradle*', 'build/**', '*.iml', '*.log', '**/*.jar', '**/*.xml']
+    }
+}
+
+checkstyleTest {
+    source = fileTree('.') {
+        excludes = ['.*/**', 'gradle*', 'build/**', '*.iml', '*.log', '**/*.jar', '**/*.xml']
+    }
+}

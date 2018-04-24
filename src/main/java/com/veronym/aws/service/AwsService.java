@@ -1,5 +1,6 @@
 package com.veronym.aws.service;
 
+import com.amazonaws.regions.Regions;
 import com.veronym.aws.model.HostState;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -18,5 +19,9 @@ public class AwsService {
 
     public void changeState() {
         System.out.println("Sukces");
+    }
+
+    public void createSecurityGroup(String groupName, String groupDecription, Regions region){
+        CreateSecurityGroup.createSecurityGroup(groupName, groupDecription, region);
     }
 }

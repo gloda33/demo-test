@@ -27,13 +27,19 @@ import com.amazonaws.services.ec2.model.AuthorizeSecurityGroupIngressRequest;
 import com.amazonaws.services.ec2.model.CreateSecurityGroupRequest;
 import com.amazonaws.services.ec2.model.CreateSecurityGroupResult;
 import com.amazonaws.services.ec2.model.IpPermission;
+import com.veronym.aws.model.AwsAccessData;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.List;
 
-public class CreateSecurityGroupApp {
+@Slf4j
+@RequiredArgsConstructor
+public class CreateSecurityGroup {
 
     /*
      * Before running the code:
@@ -48,17 +54,14 @@ public class CreateSecurityGroupApp {
      *      the credentials file in your source directory.
      */
 
-    public static void main(String[] args) {
+    public static AwsAccessData createSecurityGroup(String groupName, String groupDescription, Regions region) {
 
-        /*
-         * The ProfileCredentialsProvider will return your [default]
-         * credential profile by reading from the credentials file located at
-         * (~/.aws/credentials).
-         */
         AWSCredentials credentials = null;
+        AwsAccessData accessData = new AwsAccessData();
         try {
             credentials = new ProfileCredentialsProvider().getCredentials();
         } catch (Exception e) {
+            log.error("Cannot load the credentials from the credential profiles file.");
             throw new AmazonClientException(
                     "Cannot load the credentials from the credential profiles file. " +
                     "Please make sure that your credentials file is at the correct " +
@@ -69,20 +72,21 @@ public class CreateSecurityGroupApp {
         // Create the AmazonEC2Client object so we can call various APIs.
         AmazonEC2 ec2 = AmazonEC2ClientBuilder.standard()
             .withCredentials(new AWSStaticCredentialsProvider(credentials))
-            .withRegion(Regions.US_EAST_2)
+            .withRegion(region)
             .build();
 
         // Create a new security group.
         try {
             CreateSecurityGroupRequest securityGroupRequest = new CreateSecurityGroupRequest(
-                    "GettingStartedGroup", "Getting Started Security Group");
+                    groupName, groupDescription);
             CreateSecurityGroupResult result = ec2
                     .createSecurityGroup(securityGroupRequest);
-            System.out.println(String.format("Security group created: [%s]",
+            accessData.setSecurityGroupId(result.getGroupId());
+            log.info(String.format("Security group created: [%s]",
                     result.getGroupId()));
         } catch (AmazonServiceException ase) {
             // Likely this means that the group is already created, so ignore.
-            System.out.println(ase.getMessage());
+            log.warn(ase.getMessage());
         }
 
         String ipAddr = "0.0.0.0/0";
@@ -95,6 +99,7 @@ public class CreateSecurityGroupApp {
             // Get IP Address
             ipAddr = addr.getHostAddress()+"/10";
         } catch (UnknownHostException e) {
+            log.error("Unknown Host Exception Error ", e);
         }
 
         // Create a range that you would like to populate.
@@ -112,14 +117,16 @@ public class CreateSecurityGroupApp {
         try {
             // Authorize the ports to the used.
             AuthorizeSecurityGroupIngressRequest ingressRequest = new AuthorizeSecurityGroupIngressRequest(
-                    "GettingStartedGroup", ipPermissions);
+                    groupName, ipPermissions);
             ec2.authorizeSecurityGroupIngress(ingressRequest);
-            System.out.println(String.format("Ingress port authroized: [%s]",
+            accessData.setIpPermissions(ipPermissions.toString());
+            log.info(String.format("Ingress port authroized: [%s]",
                     ipPermissions.toString()));
         } catch (AmazonServiceException ase) {
             // Ignore because this likely means the zone has already been authorized.
-            System.out.println(ase.getMessage());
+            log.warn(ase.getMessage());
         }
+        return accessData;
     }
 
 }

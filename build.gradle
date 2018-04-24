@@ -37,7 +37,7 @@ repositories {
 
 dependencies {
     def withoutTransitive = { transitive = false }
-    //compile group: 'commons-io', name: 'commons-io', version: getExternalVersion('commons-io')
+    compile group: 'commons-io', name: 'commons-io', version: getExternalVersion('commons-io')
     compile group: 'commons-codec', name: 'commons-codec', version: getExternalVersion('commons-codec')
     compile group: 'org.apache.commons', name: 'commons-lang3', version: getExternalVersion('commons-lang3')
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: getExternalVersion('springBoot')
@@ -48,7 +48,7 @@ dependencies {
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: getExternalVersion('jackson')
     compile group: 'com.amazonaws', name: 'aws-java-sdk-core', version: getExternalVersion('aws-java-sdk')
     compile group: 'com.amazonaws', name: 'aws-java-sdk-ec2', version: getExternalVersion('aws-java-sdk')
-    //compile group: 'com.amazonaws', name: 'aws-java-sdk', version: getExternalVersion('aws-java-sdk')
+    compile group: 'com.amazonaws', name: 'aws-java-sdk', version: getExternalVersion('aws-java-sdk')
     runtime group: 'org.springframework.boot', name: 'spring-boot-devtools', version: getExternalVersion('springBoot')
     runtime group: 'org.springframework', name: 'spring-test', version: getExternalVersion('springTest')
     compileOnly group: 'org.projectlombok', name: 'lombok', version: getExternalVersion('lombok')

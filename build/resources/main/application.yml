@@ -1,0 +1,15 @@
+spring.datasource:
+  initialize: false
+logging:
+  level:
+    org.springframework.jdbc.core:
+      JdbcTemplate: TRACE
+      StatementCreatorUtils: TRACE
+    org.apache.http: DEBUG
+
+server.tomcat.basedir: build/tomcat-logs
+server.tomcat.accesslog.enabled: true
+
+spring.jmx.enabled: false
+#actuator
+management.security.enabled: false

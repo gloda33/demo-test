@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.amazonaws:aws-java-sdk-events:1.11.315">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-events/1.11.315/204901a9f7beb4ccb5797eb151f3135711a35837/aws-java-sdk-events-1.11.315.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-events/1.11.315/1b47f8118ea9e854daa1f322edb7a491baae64ce/aws-java-sdk-events-1.11.315-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

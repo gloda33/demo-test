@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.amazonaws:aws-java-sdk-kinesisvideo:1.11.315">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-kinesisvideo/1.11.315/1090983b4fd4a98b3b93edc4abaca1d667176f6c/aws-java-sdk-kinesisvideo-1.11.315.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.amazonaws/aws-java-sdk-kinesisvideo/1.11.315/8cd65c7f39db1b7f07491d3af5fcd2e254c93fbb/aws-java-sdk-kinesisvideo-1.11.315-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

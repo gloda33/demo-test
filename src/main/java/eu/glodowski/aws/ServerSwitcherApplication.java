@@ -1,4 +1,4 @@
-package com.veronym.aws;
+package eu.glodowski.aws;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;

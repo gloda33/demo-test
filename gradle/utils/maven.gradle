@@ -4,7 +4,7 @@ ext {
 
 task cleanMaven(type: Delete) {
     doFirst {
-        deleteMavenDir('com.veronym.aws/aws/')
+        deleteMavenDir('pl.glodowski.eu/aws/')
     }
 }
 

@@ -1,9 +1,9 @@
-package com.veronym.aws.controller;
+package eu.glodowski.aws.controller;
 
-import com.veronym.aws.model.GetServerStatusRequest;
-import com.veronym.aws.model.HostState;
-import com.veronym.aws.model.ServerStatusResponse;
-import com.veronym.aws.service.AwsService;
+import eu.glodowski.aws.model.GetServerStatusRequest;
+import eu.glodowski.aws.model.HostState;
+import eu.glodowski.aws.model.ServerStatusResponse;
+import eu.glodowski.aws.service.AwsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

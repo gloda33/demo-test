@@ -1,4 +1,4 @@
-package com.veronym.aws;
+package eu.glodowski.aws;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;

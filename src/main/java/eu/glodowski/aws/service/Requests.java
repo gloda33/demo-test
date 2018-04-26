@@ -1,4 +1,4 @@
-package com.veronym.aws.service;/*
+package eu.glodowski.aws.service;/*
  * Copyright 2010-2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -13,7 +13,10 @@ package com.veronym.aws.service;/*
  * permissions and limitations under the License.
  */
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.amazonaws.AmazonClientException;
@@ -23,12 +26,12 @@ import com.amazonaws.Protocol;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
-import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
 import com.amazonaws.services.ec2.model.*;
 
+@Slf4j
 public class Requests {
     private AmazonEC2         ec2;
     private ArrayList<String> instanceIds;
@@ -39,7 +42,11 @@ public class Requests {
      * @throws Exception
      */
     public Requests () throws Exception {
-        init();
+        init(Regions.DEFAULT_REGION);
+    }
+
+    public void createNeInstance() {
+
     }
 
     /**
@@ -53,7 +60,7 @@ public class Requests {
      * @see com.amazonaws.auth.PropertiesCredentials
      * @see com.amazonaws.ClientConfiguration
      */
-    private void init() throws Exception {
+    private void init(Regions region) throws Exception {
         /*
          * The ProfileCredentialsProvider will return your [default]
          * credential profile by reading from the credentials file located at
@@ -74,7 +81,7 @@ public class Requests {
         clientConfiguration.setProtocol(Protocol.HTTPS);
         ec2 = AmazonEC2ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion(Regions.US_EAST_2)
+                .withRegion(region)
                 .withClientConfiguration(clientConfiguration)
             .build();
     }
@@ -88,7 +95,9 @@ public class Requests {
      * console, and attempting to perform a launch. You will be presented with AMI options,
      * one of which will be Amazon Linux. Simply use that AMI id.
      */
-    public void submitRequests() {
+    public void submitRequests(String imageId, Double spotPrice,
+                               InstanceType instanceType, Integer instanceCount,
+                               Regions regions, String securityGroupName ) {
         //==========================================================================//
         //================= Submit a Spot Instance Request =====================//
         //==========================================================================//
@@ -97,20 +106,20 @@ public class Requests {
         RequestSpotInstancesRequest requestRequest = new RequestSpotInstancesRequest();
 
         // Request 1 x t1.micro instance with a bid price of $0.03.
-        requestRequest.setSpotPrice("0.03");
-        requestRequest.setInstanceCount(Integer.valueOf(1));
+        requestRequest.setSpotPrice(spotPrice.toString());
+        requestRequest.setInstanceCount(instanceCount);
 
         // Setup the specifications of the launch. This includes the instance type (e.g. t1.micro)
         // and the latest Amazon Linux AMI id available. Note, you should always use the latest
         // Amazon Linux AMI id or another of your choosing.
         LaunchSpecification launchSpecification = new LaunchSpecification();
-        launchSpecification.setImageId("ami-25615740");
-        launchSpecification.setInstanceType("t2.micro");
+        launchSpecification.setImageId(imageId);
+        launchSpecification.setInstanceType(instanceType);
 
 
         // Add the security group to the request.
         ArrayList<String> securityGroups = new ArrayList<String>();
-        securityGroups.add("GettingStartedGroup");
+        securityGroups.add(securityGroupName);
         launchSpecification.setSecurityGroups(securityGroups);
 
 
@@ -128,9 +137,11 @@ public class Requests {
         // Add all of the request ids to the hashset, so we can determine when they hit the
         // active state.
         for (SpotInstanceRequest requestResponse : requestResponses) {
-            System.out.println("Created Spot Request: "+requestResponse.getSpotInstanceRequestId());
+            log.info("Created Spot Request: "+requestResponse.getSpotInstanceRequestId());
             spotInstanceRequestIds.add(requestResponse.getSpotInstanceRequestId());
         }
+
+
 
     }
 
@@ -140,6 +151,19 @@ public class Requests {
      * closed, then this will return false.
      * @return
      */
+
+
+
+    public void startInstance() {
+        StartInstancesRequest request = new StartInstancesRequest();
+        request.setInstanceIds(Collections.singletonList("i-02e553467823ee37c"));
+        ec2.startInstances(request);
+
+        //TODO
+        //DescribeHostsRequest describeHostsRequest = new DescribeHostsRequest();
+       // describeHostsRequest.
+        //ec2.describeHosts()
+    }
     public boolean areAnyOpen() {
         //==========================================================================//
         //============== Describe Spot Instance Requests to determine =============//
@@ -149,7 +173,7 @@ public class Requests {
         DescribeSpotInstanceRequestsRequest describeRequest = new DescribeSpotInstanceRequestsRequest();
         describeRequest.setSpotInstanceRequestIds(spotInstanceRequestIds);
 
-        System.out.println("Checking to determine if Spot Bids have reached the active state...");
+        log.info("Checking to determine if Spot Bids have reached the active state...");
 
         // Initialize variables.
         instanceIds = new ArrayList<String>();
@@ -162,7 +186,7 @@ public class Requests {
 
             // Look through each request and determine if they are all in the active state.
             for (SpotInstanceRequest describeResponse : describeResponses) {
-                System.out.println(" " +describeResponse.getSpotInstanceRequestId() +
+                log.info(" " +describeResponse.getSpotInstanceRequestId() +
                                    " is in the "+describeResponse.getState() + " state.");
 
                 // If the state is open, it hasn't changed since we attempted to request it.
@@ -177,11 +201,11 @@ public class Requests {
             }
         } catch (AmazonServiceException e) {
             // Print out the error.
-            System.out.println("Error when calling describeSpotInstances");
-            System.out.println("Caught Exception: " + e.getMessage());
-            System.out.println("Reponse Status Code: " + e.getStatusCode());
-            System.out.println("Error Code: " + e.getErrorCode());
-            System.out.println("Request ID: " + e.getRequestId());
+            log.error("Error when calling describeSpotInstances");
+            log.error("Caught Exception: " + e.getMessage());
+            log.error("Reponse Status Code: " + e.getStatusCode());
+            log.error("Error Code: " + e.getErrorCode());
+            log.error("Request ID: " + e.getRequestId());
 
             // If we have an exception, ensure we don't break out of the loop.
             // This prevents the scenario where there was blip on the wire.
@@ -201,30 +225,30 @@ public class Requests {
         //==========================================================================//
         try {
             // Cancel requests.
-            System.out.println("Cancelling requests.");
+            log.info("Cancelling requests.");
             CancelSpotInstanceRequestsRequest cancelRequest = new CancelSpotInstanceRequestsRequest(spotInstanceRequestIds);
             ec2.cancelSpotInstanceRequests(cancelRequest);
         } catch (AmazonServiceException e) {
             // Write out any exceptions that may have occurred.
-            System.out.println("Error cancelling instances");
-            System.out.println("Caught Exception: " + e.getMessage());
-            System.out.println("Reponse Status Code: " + e.getStatusCode());
-            System.out.println("Error Code: " + e.getErrorCode());
-            System.out.println("Request ID: " + e.getRequestId());
+            log.error("Error cancelling instances");
+            log.error("Caught Exception: " + e.getMessage());
+            log.error("Reponse Status Code: " + e.getStatusCode());
+            log.error("Error Code: " + e.getErrorCode());
+            log.error("Request ID: " + e.getRequestId());
         }
 
         try {
             // Terminate instances.
-            System.out.println("Terminate instances");
+            log.info("Terminate instances");
             TerminateInstancesRequest terminateRequest = new TerminateInstancesRequest(instanceIds);
             ec2.terminateInstances(terminateRequest);
         } catch (AmazonServiceException e) {
             // Write out any exceptions that may have occurred.
-            System.out.println("Error terminating instances");
-            System.out.println("Caught Exception: " + e.getMessage());
-            System.out.println("Reponse Status Code: " + e.getStatusCode());
-            System.out.println("Error Code: " + e.getErrorCode());
-            System.out.println("Request ID: " + e.getRequestId());
+            log.error("Error terminating instances");
+            log.error("Caught Exception: " + e.getMessage());
+            log.error("Reponse Status Code: " + e.getStatusCode());
+            log.error("Error Code: " + e.getErrorCode());
+            log.error("Request ID: " + e.getRequestId());
         }
 
         // Delete all requests and instances that we have terminated.

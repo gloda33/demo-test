@@ -1,4 +1,4 @@
-package com.veronym.aws;
+package eu.glodowski.aws;
 
 import java.util.Map;
 

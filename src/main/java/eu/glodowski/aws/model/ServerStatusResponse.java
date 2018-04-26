@@ -1,4 +1,4 @@
-package com.veronym.aws.model;
+package eu.glodowski.aws.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Value;

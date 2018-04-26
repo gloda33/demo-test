@@ -3,11 +3,11 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'war'
 
 apply from: "$rootDir/gradle/utils/versions.gradle"
-apply from: "$rootDir/gradle/utils/checkstyle/checkstyle.gradle"
+//apply from: "$rootDir/gradle/utils/checkstyle/checkstyle.gradle"
 apply from: "$rootDir/gradle/utils/maven.gradle"
 apply from: "$rootDir/gradle/utils/time-tracker.gradle"
 
-group 'com.veronym.aws'
+group 'eu.glodowski.aws'
 version '1.0-SNAPSHOT'
 sourceCompatibility = 1.8
 
@@ -37,29 +37,28 @@ repositories {
 
 dependencies {
     def withoutTransitive = { transitive = false }
-    compile group: 'commons-io', name: 'commons-io', version: getExternalVersion('commons-io')
-    compile group: 'commons-codec', name: 'commons-codec', version: getExternalVersion('commons-codec')
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: getExternalVersion('commons-lang3')
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: getExternalVersion('springBoot')
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: getExternalVersion('springBoot')
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: getExternalVersion('springBoot')
-    compile group: 'org.springframework.boot', name: 'spring-boot-test', version: getExternalVersion('springBoot')
-    compile group: 'io.springfox', name: 'springfox-swagger2' , version: getExternalVersion('springfox-swagger2')
-    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: getExternalVersion('jackson')
-    compile group: 'com.amazonaws', name: 'aws-java-sdk-core', version: getExternalVersion('aws-java-sdk')
-    compile group: 'com.amazonaws', name: 'aws-java-sdk-ec2', version: getExternalVersion('aws-java-sdk')
-    compile group: 'com.amazonaws', name: 'aws-java-sdk', version: getExternalVersion('aws-java-sdk')
-    runtime group: 'org.springframework.boot', name: 'spring-boot-devtools', version: getExternalVersion('springBoot')
-    runtime group: 'org.springframework', name: 'spring-test', version: getExternalVersion('springTest')
-    compileOnly group: 'org.projectlombok', name: 'lombok', version: getExternalVersion('lombok')
-    providedRuntime group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: getExternalVersion('springBoot')
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: getExternalVersion('springBoot')
-    testCompile group: 'junit', name: 'junit', version: getExternalVersion('junit')
+    //compile group: 'commons-io', name: 'commons-io', version: commons-io
+    //compile group: 'commons-codec', name: 'commons-codec', version: commons-codec
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: springBoot
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: springBoot
+    compile group: 'org.springframework.boot', name: 'spring-boot-test', version: springBoot
+    compile group: 'io.springfox', name: 'springfox-swagger2' , version: springfoxswagger2
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: jackson
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-core', version: awsjavasdk
+    compile group: 'com.amazonaws', name: 'aws-java-sdk-ec2', version: awsjavasdk
+    //compile group: 'com.amazonaws', name: 'aws-java-sdk', version: awsjavasdk
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: springBoot
+    runtime group: 'org.springframework.boot', name: 'spring-boot-devtools', version: springBoot
+    runtime group: 'org.springframework', name: 'spring-test', version: springTest
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: lombok
+    providedRuntime group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: springBoot
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBoot
+    testCompile group: 'junit', name: 'junit', version: junit
 }
 
-configurations {
-    providedRuntime
-}
+//configurations {
+//    providedRuntime
+//}
 
 bootRun {
     systemProperty 'server.port', '8080'
@@ -70,6 +69,13 @@ task copyConfig(type: Copy) {
     into "$buildDir/resources/main"
 }
 bootRun.dependsOn copyConfig
+
+//jar {
+//    manifest {
+//        attributes(
+//                "Class-Path": configurations.compile.collect { it.getName() }.join(' '))
+//    }
+//}
 
 war.dependsOn clean
 compileJava.mustRunAfter clean

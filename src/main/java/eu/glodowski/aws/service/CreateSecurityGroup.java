@@ -1,4 +1,4 @@
-package com.veronym.aws.service;
+package eu.glodowski.aws.service;
 
 /*
  * Copyright 2010-2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
@@ -27,8 +27,7 @@ import com.amazonaws.services.ec2.model.AuthorizeSecurityGroupIngressRequest;
 import com.amazonaws.services.ec2.model.CreateSecurityGroupRequest;
 import com.amazonaws.services.ec2.model.CreateSecurityGroupResult;
 import com.amazonaws.services.ec2.model.IpPermission;
-import com.veronym.aws.model.AwsAccessData;
-import lombok.NoArgsConstructor;
+import eu.glodowski.aws.model.AwsAccessData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -54,7 +53,9 @@ public class CreateSecurityGroup {
      *      the credentials file in your source directory.
      */
 
-    public static AwsAccessData createSecurityGroup(String groupName, String groupDescription, Regions region) {
+    public static AwsAccessData createSecurityGroup(String groupName,
+                                                    String groupDescription,
+                                                    Regions region) {
 
         AWSCredentials credentials = null;
         AwsAccessData accessData = new AwsAccessData();

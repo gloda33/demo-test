@@ -1,4 +1,4 @@
-package com.veronym.aws.service;/*
+package eu.glodowski.aws.service;/*
  * Copyright 2010-2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License").
@@ -14,6 +14,8 @@ package com.veronym.aws.service;/*
  */
 
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.ec2.model.InstanceType;
 
 /**
  * Welcome to your new AWS Java SDK based project!
@@ -34,7 +36,7 @@ import com.amazonaws.AmazonServiceException;
  *       http://aws.amazon.com/ec2/
  *
  */
-public class GettingStartedApp {
+public class CreateInstance {
     private static final long SLEEP_CYCLE = 60000;
 
     /*
@@ -50,12 +52,9 @@ public class GettingStartedApp {
      *      the credentials file in your source directory.
      */
 
-    public static void main(String[] args) throws Exception {
-
-        System.out.println("===========================================");
-        System.out.println("Welcome to the AWS Java SDK!");
-        System.out.println("===========================================");
-
+    public static void sendRequest(String imageId, Double spotPrice,
+                            InstanceType instanceType, Integer instanceCount,
+                            Regions regions, String securityGroupName) throws Exception {
 
         /*
          * Amazon EC2
@@ -72,7 +71,7 @@ public class GettingStartedApp {
             Requests requests = new Requests();
 
             // Submit all of the requests.
-            requests.submitRequests();
+            requests.submitRequests(imageId, spotPrice, instanceType, instanceCount, regions, securityGroupName);
 
             // Loop through all of the requests until all bids are in the active state
             // (or at least not in the open state).
@@ -83,7 +82,7 @@ public class GettingStartedApp {
             } while (requests.areAnyOpen());
 
             // Cancel all requests and terminate all running instances.
-            requests.cleanup();
+            //requests.cleanup();
 
         } catch (AmazonServiceException ase) {
             // Write out any exceptions that may have occurred.

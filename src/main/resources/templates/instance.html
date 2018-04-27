@@ -11,6 +11,7 @@
         <p>Instance Count: <input type="text" th:field="*{instanceCount}" /></p>
         Select Instance type:
         <select th:field="*{instanceType}">
+            <!--/*@thymesVar id="fromValue" type="com.amazonaws.services.ec2.model.InstanceType"*/-->
             <option
                     th:each="types: ${T(com.amazonaws.services.ec2.model.InstanceType).values()}"
                     th:value="${types}"

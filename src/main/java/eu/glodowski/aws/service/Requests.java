@@ -96,7 +96,7 @@ public class Requests {
      * one of which will be Amazon Linux. Simply use that AMI id.
      */
     public void submitRequests(String imageId, Double spotPrice,
-                               InstanceType instanceType, Integer instanceCount,
+                               String instanceType, Integer instanceCount,
                                Regions regions, String securityGroupName ) {
         //==========================================================================//
         //================= Submit a Spot Instance Request =====================//
@@ -125,6 +125,7 @@ public class Requests {
 
         // Add the launch specifications to the request.
         requestRequest.setLaunchSpecification(launchSpecification);
+
 
         // Call the RequestSpotInstance API.
         RequestSpotInstancesResult requestResult = ec2.requestSpotInstances(requestRequest);

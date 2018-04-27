@@ -1,6 +1,7 @@
 package eu.glodowski.aws.service;
 
 import com.amazonaws.regions.Regions;
+import com.amazonaws.services.ec2.model.InstanceType;
 import eu.glodowski.aws.model.HostState;
 import eu.glodowski.aws.model.Instance;
 import lombok.RequiredArgsConstructor;

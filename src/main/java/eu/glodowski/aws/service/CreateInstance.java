@@ -53,7 +53,7 @@ public class CreateInstance {
      */
 
     public static void sendRequest(String imageId, Double spotPrice,
-                            InstanceType instanceType, Integer instanceCount,
+                            String instanceType, Integer instanceCount,
                             Regions regions, String securityGroupName) throws Exception {
 
         /*
